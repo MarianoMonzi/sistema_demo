@@ -3,7 +3,7 @@ from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.models import User
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.sessions.models import Session
-from django.db import IntegrityError
+from django.db import IntegrityError, transaction
 from .forms import ClienteForm, ListaCorrectivaForm, ListaPreventivaForm, TareaForm
 from .models import Cliente, Tarea, ListaCorrectiva, ListaPreventiva, Planillas, PlanillaCliente, MensajeWhatsApp
 from django.http import JsonResponse, HttpResponse
@@ -305,35 +305,43 @@ def crear_planilla(cliente_id, selectServicio):
 
 def guardar_tarea(request):
     if request.method == 'POST':
-        cliente_id = request.POST['cliente_id']
-        cliente = Cliente.objects.get(id=cliente_id)
-        fecha = request.POST.get('fecha')
-        proxservicio = request.POST.get('proxservicio')
-        selectServicio = request.POST.get('servicio')
-        print(selectServicio)
-        mecanico_id = request.POST['mecanico']
-        mecanico = User.objects.get(id=mecanico_id)
-        kilometros = request.POST.get('kilometros')
-        print(cliente_id)
+        try:
+            with transaction.atomic():
+                cliente_id = request.POST['cliente_id']
+                cliente = Cliente.objects.get(id=cliente_id)
+                fecha = request.POST.get('fecha')
+                proxservicio = request.POST.get('proxservicio')
+                selectServicio = request.POST.get('servicio')
+                mecanico_id = request.POST['mecanico']
+                mecanico = User.objects.get(id=mecanico_id)
+                kilometros = request.POST.get('kilometros')
 
-        planilla = crear_planilla(cliente_id, selectServicio)
+                planilla = crear_planilla(cliente_id, selectServicio)
 
-        if planilla:
-            tarea_nueva = Tarea(
-            cliente=cliente,
-            fecha=fecha,
-            planilla=planilla,
-            kilometros=kilometros,
-            proxservicio=proxservicio,
-            mecanico=mecanico
-            )
-            tarea_nueva.save()
-            return JsonResponse({'message': 'Tarea guardada correctamente'})
-        else:
-            return JsonResponse({'message': 'Planilla no creada'})
-
-        
-        
+                if planilla:
+                    tarea_nueva = Tarea(
+                        cliente=cliente,
+                        fecha=fecha,
+                        planilla=planilla,
+                        kilometros=kilometros,
+                        proxservicio=proxservicio,
+                        mecanico=mecanico
+                    )
+                    tarea_nueva.save()
+                    print('Tarea guardada correctamente')
+                    return JsonResponse({'message': 'Tarea guardada correctamente'})
+                else:
+                    print('Planilla no creada')
+                    return JsonResponse({'message': 'Planilla no creada'}, status=500)
+        except Cliente.DoesNotExist:
+            print(f'Cliente con id {cliente_id} no existe')
+            return JsonResponse({'error': 'Cliente no existe'}, status=404)
+        except User.DoesNotExist:
+            print(f'Mecánico con id {mecanico_id} no existe')
+            return JsonResponse({'error': 'Mecánico no existe'}, status=404)
+        except Exception as e:
+            print(f'Error guardando la tarea: {e}')
+            return JsonResponse({'error': str(e)}, status=500)
     else:
         return JsonResponse({'error': 'Método no permitido'}, status=405)
 
