@@ -12,15 +12,15 @@
 <body class="container">
     <div class="txt-cont">
         <div class="img">
-            <a href="{% url 'clientes' %}"><img src="../static/image/logoSmall.png"></a>
+            <a href="{% url 'clientes' %}">*LOGO LUBRICENTRO*</a>
             <div>
-                <h2>LUBRICENTRO INTEGRALE</h2>
-                <p>Pedro Dreyer 795, Monte Grande<br><span>Tel. </span>2137 0908 | <span>Cel. </span>+54 11 3292 8234
+                <h2>NOMBRE DEL LUBRICENTRO</h2>
+                <p>Direccion, Ciudad<br><span>Tel. </span>xxx xxxx | <span>Cel. </span>+54 11 xxxx xxxx
                 </p>
             </div>
         </div>
     </div>
-    <h1>LISTA CORRECTIVA</h1>
+    <h1><strong>LISTA CORRECTIVA</strong></h1>
     <button id="btn-agregar-fila">Agregar Tarea</button>
     <form method="POST" action="{% url 'planilla_correctiva' %}">
         {% csrf_token %}

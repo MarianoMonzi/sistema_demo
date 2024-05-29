@@ -237,10 +237,6 @@ header label a i:hover{
 
 .search-bar{
 	display: flex;
-    position: absolute;
-    left: 75%;
-    top: 29%;
-    z-index: 1;
 }
 
 .search-bar input{

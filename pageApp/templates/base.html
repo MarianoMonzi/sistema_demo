@@ -27,25 +27,26 @@
         <div id="loader"></div>
     </header>
     <div class="container navigate">
-        <a class="imgLink" href="{% url 'clientes' %}"><img src="../static/image/logo.png"></a>
+        <a class="imgLink" href="{% url 'clientes' %}"><img src="../static/image/logoBlueline.png"></a>
         <nav>
             <a href="{% url 'planilla_preventiva' %}">Tareas Preventivas</a>
             <a href="{% url 'planilla_correctiva' %}">Tareas Correctivas</a>
         </nav>
         <button id="open">Nuevo Cliente</button>
     </div>
-    <div class="blur"></div>
-    <div class="blur"></div>
-    <div class="blur-white"></div>
-    <div class="blur-white"></div>
-    <div class="blur-red"></div>
-    <div class="blur-red"></div>
     <form action="{% url 'clientes' %}" method="GET">
         <div class="search-bar">
             <input type="text" name="q" placeholder="Buscar..." id="searchInput">
             <i class="ri-search-line"></i>
         </div>
     </form>
+    <div class="blur"></div>
+    <div class="blur"></div>
+    <div class="blur-white"></div>
+    <div class="blur-white"></div>
+    <div class="blur-red"></div>
+    <div class="blur-red"></div>
+    
     {% block content %}
 
     {% endblock %}
