@@ -226,8 +226,10 @@ function guardarTarea(selectServicio) {
         data: $('#nuevaTareaForm').serialize(),
         success: function (response) {
             alert('Tarea guardada correctamente');
-            console.log(selectServicio);
-            location.reload();  // Recargar la página
+            var planillaUrl = `/planilla/?servicio=${response.servicio}&cliente_id=${response.cliente_id}&fecha=${response.fecha}&kms=${response.kilometros}&tarea_id=${response.tarea_id}`;
+
+            window.location.href = planillaUrl;
+            //location.reload();  // Recargar la página
             $('#nuevaTareaForm')[0].reset();
             $('#popup').hide();
         },

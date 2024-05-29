@@ -329,7 +329,14 @@ def guardar_tarea(request):
                     )
                     tarea_nueva.save()
                     print('Tarea guardada correctamente')
-                    return JsonResponse({'message': 'Tarea guardada correctamente'})
+                    return JsonResponse({
+                        'message': 'Tarea guardada correctamente',
+                        'tarea_id': tarea_nueva.id,
+                        'servicio': selectServicio,
+                        'cliente_id': cliente_id,
+                        'fecha': fecha,
+                        'kilometros': kilometros
+                    })
                 else:
                     print('Planilla no creada')
                     return JsonResponse({'message': 'Planilla no creada'}, status=500)
