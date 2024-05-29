@@ -1,0 +1,75 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Blueline Panel</title>
+    <link rel="stylesheet" type="text/css" href="../static/style/login.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.2.0/remixicon.min.css">
+</head>
+
+<body>
+    {% block content %}
+    <h1>Blueline IT</h1>
+    <h3>LOGIN</h3>
+    <div class="log-cont">
+        <form method="POST" >
+            {% csrf_token %}
+            <h2>Inicia sesion</h2>
+            <div class="form-group">
+                <div class="icon">
+                    <i class="ri-user-fill"></i>
+                    <label for="username">Usuario</label>
+                </div>
+                <input type="text" name="username" id="username">
+            </div>
+            <div class="form-group">
+                <div class="icon">
+                    <i class="ri-lock-2-line"></i>
+                    <label for="password">Contraseña</label>
+                </div>
+                <input type="password" name="password" id="password">
+            </div>
+            <div class="rememberUser">
+                <input type="checkbox" name="recordarUsuario" id="recordarUsuario">
+                <label for="recordarUsuario">Recordar usuario para este dispositivo</label>
+            </div>
+            <button class="btn-log">Ingresar</button>
+            {{error}}
+        </form>
+    </div>
+    {% endblock %}
+
+    <script>
+        $.ajax({
+            url: '/loginlubricentro/',
+            type: 'POST',
+            data: {
+                username: 'nombredeusuario',
+                password: 'contraseña',
+            },
+            success: function(response) {
+                // Manejar la respuesta del servidor
+                if (response.user) {
+                    // Mostrar el nombre de usuario en el frontend
+                    console.log('Nombre de usuario:', response.user.username);
+                    // Redirigir a la página de clientes u otra página después del inicio de sesión
+                    window.location.href = '/clientes/';
+                } else if (response.error) {
+                    // Mostrar mensajes de error si el inicio de sesión falla
+                    console.error('Error:', response.error);
+                }
+            },
+            error: function(xhr, status, error) {
+                // Manejar errores de la solicitud AJAX
+                console.error('Error:', error);
+            }
+        });
+    </script>
+
+
+</body>
+
+</html>

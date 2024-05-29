@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<table class="container data-table">
+    </form>
+    <thead>
+        <tr>
+            <th>Patente</th>
+            <th>Proxima Visita<button><i class="ri-filter-2-fill"></i></button></th>
+            <th>Vehículo<button><i class="ri-filter-2-fill"></i></button></th>
+            <th>Cliente<button><i class="ri-filter-2-fill"></i></button></th>
+        </tr>
+    </thead>
+    <tbody id="clientesTable">
+            {% for item in clientes %}
+                <tr>
+                    <td>{{ item.cliente.patente }}</td>
+                    <td>{{ item.proxima_visita }}</td>
+                    <td>{{ item.cliente.modelo }}</td>
+                    <td class="openUser" data-cliente-id="{{ item.cliente.id }}">{{ item.cliente.nombre }}</td>
+                </tr>
+            {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

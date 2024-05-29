@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Planilla Correctiva</title>
+    <link rel="stylesheet" type="text/css" href="../static/style/planilla.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.2.0/remixicon.min.css">
+</head>
+
+<body class="container">
+    <div class="txt-cont">
+        <div class="img">
+            <a href="{% url 'clientes' %}"><img src="../static/image/logoSmall.png"></a>
+            <div>
+                <h2>LUBRICENTRO INTEGRALE</h2>
+                <p>Pedro Dreyer 795, Monte Grande<br><span>Tel. </span>2137 0908 | <span>Cel. </span>+54 11 3292 8234
+                </p>
+            </div>
+        </div>
+        <div class="data">
+            <ul>
+                <li>Cliente: {{cliente.nombre}}</li>
+                <li>Vehículo: {{cliente.modelo}}</li>
+                <li>Patente: {{cliente.patente}}</li>
+                <li>Fecha: {{fecha}}</li>
+                <li>Kms: {{kms}}</li>
+            </ul>
+        </div>
+    </div>
+    <form method="POST" action="{% url 'planilla' %}">
+        {% csrf_token %}
+        <div class="txt-cont" id="tabla-dinamica">
+            <!-- Contenido de la tabla dentro del formulario -->
+            <table>
+                <!-- Cabecera de la tabla -->
+                <thead>
+                    <tr>
+                        <th>CAMBIO</th>
+                        <th>CHECK</th>
+                        <th>OBSERVACIONES</th>
+                        <th>TAREA</th>
+                    </tr>
+
+                </thead>
+                <tbody>
+
+                    {% for item in items %}
+                    <tr>
+                        <td><input type="checkbox" name="cambio_{{ forloop.counter }}" {% if item.cambio %} checked {% endif %}></td>
+                        <td><input type="checkbox" name="check_{{ forloop.counter }}" {% if item.checkbox %} checked {% endif %}></td>
+                        <td><input type="text" name="observaciones_{{ forloop.counter }}"
+                                value="{{ item.observaciones }}" class="wide-input"></td>
+                        {% if item.items %}
+                        <td>{{ item.items }}</td>
+                        <input type="hidden" name="item_{{ forloop.counter }}" value="{{ item.items }}">
+                        {% else %}
+                        <td>{{ item.nombre }}</td>
+                        <input type="hidden" name="item_{{ forloop.counter }}" value="{{ item.nombre }}">
+                        {% endif %}
+                    </tr>
+                    {% endfor %}
+
+                </tbody>
+            </table>
+        </div>
+        <input type="hidden" id="input_tarea_id" name="tarea_id" value="{{ tarea_id }}" >
+        <!-- Botón para enviar el formulario -->
+
+        <input type="submit" value="Guardar" class="no-print">
+        <input type="button" value="Imprimir" onclick="window.print();" class="no-print">
+    </form>
+    <script>
+        // Obtener el valor de tarea_id de la URL o de donde sea que lo estés obteniendo
+        var tarea_id = obtener_tarea_id();
+
+        // Modificar el valor de un input en el HTML con el valor de tarea_id
+        document.getElementById('input_tarea_id').value = tarea_id;
+        console.log(tarea_id)
+
+        function obtener_tarea_id() {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get('tarea_id');
+        }
+
+        
+    </script>
+
+</body>
+
+
+</html>

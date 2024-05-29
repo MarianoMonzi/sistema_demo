@@ -1,0 +1,208 @@
+h1, h2, h3, h4, label, span, p, ul, li{
+	margin: 0;
+	padding: 0;
+}
+
+body{
+	font-family: 'IBM Plex Sans', sans-serif;
+	padding: 7px 12px;
+}
+
+*{
+	box-sizing: border-box;
+}
+
+.container{
+	max-width: 21cm;
+	margin: auto;
+}
+
+#btn-agregar-fila{
+	margin-bottom: 10px;
+    padding: 4px;
+    outline: none;
+	cursor: pointer;
+	transition: all 0.3s ease;
+}
+
+#btn-agregar-fila:hover{
+	opacity: 0.8;
+}
+
+.submit{
+	margin-top: 10px;
+    padding: 4px;
+    outline: none;
+	cursor: pointer;
+	transition: all 0.3s ease;
+}
+
+.submit:hover{
+	opacity: 0.8;
+}
+
+.btn-quitar{
+	outline: none;
+	margin: 0;
+	cursor: pointer;
+}
+
+.btn-quitar:hover{
+	opacity: 0.8;
+}
+
+.txt-cont{
+	display: flex;
+}
+
+.img{
+	display: flex;
+	align-items: center;
+	gap: 20px;
+	width: 60%;
+}
+
+.img div h2{
+	font-size: 18px;
+	font-weight: 700;
+	letter-spacing: 1px;
+}
+
+.img div p{
+	font-size: 14px;
+}
+
+.img div p span{
+	font-style: italic;
+}
+
+.data{
+	display: flex;
+	justify-content: center;
+	width: 40%;
+}
+
+.data ul{
+	list-style: none;
+	margin-top: 27px;
+
+}
+.data li{
+	font-weight: 700;
+	font-size: 14px;
+	margin-bottom: 3px;
+}
+
+body h1{
+	text-align: center;
+	font-weight: 400;
+	font-size: 12px;
+	letter-spacing: 0.3px;
+	padding-top: 20px;
+	padding-bottom: 5px;
+}
+
+table{
+	width: 100%;
+	border-collapse: collapse;
+}
+
+table tbody tr{
+	border-right: 1px solid #cfccca;
+	border-left: 1px solid #cfccca;
+}
+
+table tbody tr:nth-child(even){
+	background-color: #f5faf9;
+}
+
+table tbody tr:last-of-type{
+	border-bottom: 1px solid #cfccca;
+}
+
+table tbody td{
+	text-align: center;
+	font-size: 12px;
+}
+
+table tbody td i{
+    cursor: pointer;
+    font-size: 16px;
+}
+
+table thead th{
+	text-align: center;
+	font-size: 12px;
+	padding-top: 3px;
+	padding-bottom: 3px;
+	border-right: 0.7px solid #cfccca;
+}
+
+table thead tr{
+	border-left: 1px solid #cfccca;
+	border-top: 1px solid #cfccca;
+	border-right: 1px solid #cfccca;
+	border-bottom: 2px solid #cfccca;
+}
+
+input[type="text"] {
+    width: 100%; /* Establece que el ancho del input sea el 100% del contenedor */
+    max-width: 100%; /* Establece un ancho máximo para el input */
+    box-sizing: border-box; /* Incluye el ancho del borde y el padding en el ancho total */
+}
+
+.wide-input {
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+	border: none; /* Quita el borde del input */
+    outline: none; /* Quita el contorno al hacer clic en el input */
+}
+
+@media(width < 700px){
+	.txt-cont img{
+		width: 35%;
+	}
+	.img{
+		gap: 10px;
+	}
+	.txt-cont .img div h2{
+		font-size: 14px;
+		text-align: center;
+	}
+	.txt-cont .img div p{
+		margin-top: 5px;
+		font-size: 10px;
+		text-align: center;
+	}
+	.data ul{
+		margin: 0;
+		margin-top: 10px;
+		margin-left: 8px;
+		padding: 0;
+	}
+	.data li{
+		font-size: 10px;
+	}
+	table tbody td{
+		font-size: 8px;
+	}
+	table thead th{
+		font-size: 10px;
+	}
+}
+
+@media print {
+    @page {
+        size: auto;
+        margin: 0;
+    }
+
+    body {
+        margin: 1.6cm; /* Ajusta el margen según tus necesidades */
+    }
+
+    .no-print {
+        display: none;
+    }
+}

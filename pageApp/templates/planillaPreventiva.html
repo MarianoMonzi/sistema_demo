@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Planilla Preventiva</title>
+    <link rel="stylesheet" type="text/css" href="../static/style/planilla.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.2.0/remixicon.min.css">
+</head>
+
+<body class="container">
+    <div class="txt-cont">
+        <div class="img">
+            <a href="{% url 'clientes' %}"><img src="../static/image/logoSmall.png"></a>
+            <div>
+                <h2>LUBRICENTRO INTEGRALE</h2>
+                <p>Pedro Dreyer 795, Monte Grande<br><span>Tel. </span>2137 0908 | <span>Cel. </span>+54 11 3292 8234
+                </p>
+            </div>
+        </div>
+    </div>
+    <h1>LISTA PREVENTIVA</h1>
+    <button id="btn-agregar-fila">Agregar Tarea</button>
+    <form method="POST" action="{% url 'planilla_preventiva' %}">
+        {% csrf_token %}
+        <input type="submit" value="Guardar">
+        <div class="txt-cont" id="tabla-dinamica">
+            <!-- Contenido de la tabla dentro del formulario -->
+            <table>
+                <!-- Cabecera de la tabla -->
+                <thead>
+                    <tr>
+                        <th>TAREA</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in items %}
+
+                    <tr>
+                        <td data-item-id="{{ item.id }}">{{ item.items }}</td>
+                        <td><button class='btn-quitar'>Quitar</button></td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <!-- Botón para enviar el formulario -->
+        
+    </form>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const btnAgregarFila = document.getElementById('btn-agregar-fila');
+            const tabla = document.getElementById('tabla-dinamica').getElementsByTagName('tbody')[0];
+
+            // Función para agregar una nueva fila a la tabla
+            function agregarFila() {
+                const nuevaFila = document.createElement('tr');
+                nuevaFila.innerHTML = `
+                    <td data-item-id="{{ item.id }}"><input type="text" name="items"></td>
+                    <td><button class='btn-quitar'>Quitar</button></td>
+                `;
+                tabla.appendChild(nuevaFila);
+            }
+
+            // Agregar evento al botón de agregar fila
+            btnAgregarFila.addEventListener('click', agregarFila);
+
+            // Agregar evento delegado al cuerpo de la tabla para capturar clics en el botón "Quitar"
+            tabla.addEventListener('click', function (event) {
+                if (event.target.classList.contains('btn-quitar')) {
+                    const fila = event.target.closest('tr');
+                    const itemId = fila.querySelector('td[data-item-id]').getAttribute('data-item-id');
+                    eliminarTarea(itemId);  // Llamar a la función para eliminar la tarea
+                    fila.remove();  // Quitar la fila de la tabla visualmente
+                }
+            });
+
+            // Función para eliminar una tarea en el servidor
+            function eliminarTarea(itemId) {
+                fetch(`/eliminar_item_preventiva/?item_id=${itemId}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'X-CSRFToken': '{{ csrf_token }}'  // Asegúrate de incluir el token CSRF
+                    }
+                })
+                    .then(response => {
+                        if (response.ok) {
+                            alert('Item eliminado correctamente');
+                            console.log(tareaId)
+
+                            // Aquí puedes realizar acciones adicionales después de eliminar la tarea
+                        } else {
+                            alert('Error al eliminar item');
+                            // Aquí puedes manejar errores si la eliminación falla
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error al eliminar item:', error);
+                    });
+            }
+
+
+        });
+
+    </script>
+
+</body>
+
+
+</html>

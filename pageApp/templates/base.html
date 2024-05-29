@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="../static/style/estilos.css">
+    <link rel="stylesheet" type="text/css"
+        href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.css">
+    <link rel="stylesheet" type="text/css"
+        href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick-theme.min.css">
+    <link rel="stylesheet" type="text/css"
+        href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.2.0/remixicon.min.css">
+        <script src="../static/index.js" defer></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+
+    <title>Lubricentro</title>
+</head>
+
+<body>
+    <header>
+        <a href="https://bluelinehub.net/" target="_blank"><img src="../static/image/logoBlueline.png"></a>
+        <div>
+            <label id="username-label"></label>
+            <a href="{% url 'logout' %}"><i class="ri-user-fill"></i></a>
+        </div>
+        <div id="loader"></div>
+    </header>
+    <div class="container navigate">
+        <a class="imgLink" href="{% url 'clientes' %}"><img src="../static/image/logo.png"></a>
+        <nav>
+            <a href="{% url 'planilla_preventiva' %}">Tareas Preventivas</a>
+            <a href="{% url 'planilla_correctiva' %}">Tareas Correctivas</a>
+        </nav>
+        <button id="open">Nuevo Cliente</button>
+    </div>
+    <div class="blur"></div>
+    <div class="blur"></div>
+    <div class="blur-white"></div>
+    <div class="blur-white"></div>
+    <div class="blur-red"></div>
+    <div class="blur-red"></div>
+    <form action="{% url 'clientes' %}" method="GET">
+        <div class="search-bar">
+            <input type="text" name="q" placeholder="Buscar..." id="searchInput">
+            <i class="ri-search-line"></i>
+        </div>
+    </form>
+    {% block content %}
+
+    {% endblock %}
+    <!--POPUP DE FORMULARIO DE NUEVO CLIENTE-->
+    <div class="overlay" id="overlay"></div>
+    <div class="popup" id="popup">
+        <span class="close" id="close">&times;</span>
+        <h3>Agregar nuevo cliente.</h3>
+        <form method="POST" id="nuevoClienteForm" action="/guardar_cliente/">
+            {% csrf_token %}
+            <div class="inputs-cont client">
+                <div>
+                    <label>Nombre</label>
+                    <input type="text" name="nombre" id="nombre">
+                </div>
+                <div>
+                    <label>Número</label>
+                    <input type="number" name="numero" id="numero">
+                </div>
+                <div>
+                    <label>Patente</label>
+                    <input type="text" name="patente" id="patente">
+                </div>
+                <div>
+                    <label>Vehículo</label>
+                    <input type="text" name="vehiculo" id="vehiculo">
+                </div>
+            </div>
+
+            <div class="save-btn">
+                <button>Guardar</button>
+            </div>
+        </form>
+    </div>
+
+    <!--POPUP DE FORMULARIO DE PARA EDITAR CLIENTE-->
+    <div class="overlay" id="overlayEdit"></div>
+    <div class="popup" id="popupEdit">
+        <span class="close" id="closeEdit">&times;</span>
+        <h3>Editar cliente.</h3>
+        <form method="POST" id="editarClienteForm">
+            {% csrf_token %}
+            <div class="inputs-cont client">
+                <div>
+                    <label>Nombre</label>
+                    <input type="text" name="nombre" id="nombreEdit">
+                </div>
+                <div>
+                    <label>Numero</label>
+                    <input type="number" name="numero" id="numeroEdit">
+                </div>
+                <div>
+                    <label>Patente</label>
+                    <input type="text" name="patente" id="patenteEdit">
+                </div>
+                <div>
+                    <label>Vehículo</label>
+                    <input type="text" name="vehiculo" id="modeloEdit">
+                </div>
+            </div>
+
+            <div class="save-btn">
+                <button>Actualizar</button>
+            </div>
+        </form>
+    </div>
+
+    <!--POPUP DE CADA CLIENTE-->
+    <div id="popupUser" class="popupUser">
+        <span class="close" id="closeUser">&times;</span>
+        <div class="data-cont">
+            <div class="info" id="detalleClienteContainer">
+                
+
+            </div>
+            <div>
+                <div class="toggle-wsp-cont">
+                    <div class="toggle">
+                       <input type="checkbox" id="btn" class="btn">
+                       <label for="btn" class="switch"></label>
+                    </div>
+                    <i class="ri-whatsapp-line wpicon"></i>
+                </div>
+            </div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Fecha</th>
+                        <th>Servicio</th>
+                        <th>Kms</th>
+                        <th>Próximo servicio</th>
+                        <th>Mécanico</th>
+                    </tr>
+                </thead>
+                <tbody id="tbody-tareas">
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!--POPUP DE NUEVA TAREA DENTRO DE CLIENTE-->
+    <div class="viewport">
+        <div class="popupTask" id="popupTask">
+            <span class="close" id="closeTask">&times;</span>
+            <h3>Agregar nueva tarea</h3>
+
+            <form method="POST" id="nuevaTareaForm">
+                {% csrf_token %}
+                <div class="inputs-cont task">
+                    <input type="hidden" name="cliente_id" id="clienteIdInput">
+                    <div class="all-inputs">
+                        <label>Fecha</label>
+                        <input type="date" name="fecha" id="fecha">
+                    </div>
+                    <div class="all-inputs">
+                        <label>Prox. Servicio</label>
+                        <input type="date" name="proxservicio" id="proxservicio">
+                    </div>
+                    <div class="all-inputs">
+                        <label>Servicios</label>
+                        <select name="servicio" id="selectServicio">
+                            <option value="">Selecciona un Servicio...</option>
+                            <option value="Servicio Preventivo">Servicio Preventivo</option>
+                            <option value="Servicio Correctivo">Servicio Correctivo</option>
+                        </select>
+                    </div>
+                    <div class="all-inputs">
+                        <label>Mecánico</label>
+                        <select name="mecanico" id="selectMecanico">
+                            <!-- Aquí se cargarán dinámicamente los nombres de los mecánicos -->
+                            <option value="{{ mecanico.id }}" id="mecanico_id">Selecciona un mecánico...</option>
+                        </select>
+                    </div>
+                    <div class="all-inputs">
+                        <label>Kilometros</label>
+                        <input type="text" name="kilometros" id="kilometros">
+                    </div>
+                </div>
+                <div class="save-btn">
+                    <button>Guardar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <script>
+        $(document).ready(function () {
+            var loader = $('#loader');
+
+            $('#closeUser').click(function() {
+                // Recargar la página
+                location.reload();
+            });
+            comprobarMensajesPendientes()
+            
+
+            
+
+            function comprobarYEnviarMensajes() {
+                
+                $.ajax({
+                    type: 'GET',
+                    url: `/enviar_mensajes_pendientes/`,
+                    success: function (response) {
+                        console.log(response);
+                        var cantidadMensajes = Array.isArray(response.clientes_a_enviar) ? response.clientes_a_enviar.length : 0;
+                        console.log(`Mensajes enviados a clientes: ${cantidadMensajes}`);
+                    },
+                    error: function (xhr, status, error) {
+                        console.error('Error al comprobar mensajes pendientes:', error);
+                    }
+                });
+            }
+
+            function comprobarMensajesPendientes() {
+                $.ajax({
+                    type: 'GET',
+                    url: `/comprobar_mensajes_pendientes/`,
+                    success: function (response) {
+                        console.log(response);
+                        comprobarYEnviarMensajes();
+                    },
+                    error: function (xhr, status, error) {
+                        console.error('Error al comprobar mensajes pendientes:', error);
+                    }
+                });
+            }
+            
+            // Función para cargar los detalles del cliente al hacer clic en su nombre
+            $(document).on('click', '.openUser', function () {
+                var clienteId = $(this).data('cliente-id');
+                $('#clienteIdInput').val(clienteId);
+
+                let toggleBtn = document.getElementById('btn'); 
+
+                toggleBtn.addEventListener('change', function() {
+                    const isChecked = toggleBtn.checked;
+                    console.log(isChecked); // Imprime true si está activado, false si está desactivado
+
+                    var enviarMensaje = isChecked;
+                    saveToggleState(clienteId, enviarMensaje);
+
+                });
+
+                obtenerYAplicarEstadoToggle();
+
+                function obtenerYAplicarEstadoToggle() {
+                    $.ajax({
+                        type: 'GET',
+                        url: `/obtener_estado_toggle/${clienteId}/`,  // Endpoint para obtener el estado del toggle desde la base de datos
+                        success: function (response) {
+                            toggleBtn.checked = response.enviar_mensaje; // Aplicar el estado del toggle obtenido
+                        },
+                        error: function (xhr, status, error) {
+                            console.error('Error al obtener el estado del toggle:', error);
+                        }
+                    });
+                }
+            
+                // Llamar a la función para obtener y aplicar el estado del toggle al cargar la página
+                
+
+                function saveToggleState(clienteId, enviarMensaje) {
+                    var csrftoken = getCookie('csrftoken');
+                    $.ajax({
+                        type: 'POST',
+                        url: '/guardar_estado_toggle/',
+                        headers: {
+                            'X-CSRFToken': csrftoken  // Asegúrate de incluir el token CSRF
+                        },
+                        data: {
+                            cliente_id: clienteId,
+                            enviar_mensaje: enviarMensaje
+                        },
+                        success: function (response) {
+                            console.log(response.mensaje);
+                        },
+                        error: function (xhr, status, error) {
+                            console.error('Error al guardar el estado del toggle:', error);
+                        }
+                    });
+                }
+
+                
+                
+                
+                
+                
+                // Pasar ID del cliente al form de tareas
+
+                // Hacer la solicitud AJAX para obtener los detalles del cliente
+                
+
+                // Obtener etiqueta para eliminar cliente
+                $('#detalleClienteContainer').on('click', 'p', function (event) {
+                    if ($(event.target).hasClass('ri-close-line')) {
+                        eliminarCliente(clienteId);  
+                    }
+                });
+
+                function enviarMensaje(clienteId) {
+                    $.ajax({
+                        url: `/enviar/${clienteId}/`,
+                        method: 'GET',
+                        contentType: 'application/json',
+                        success: function(data) {
+                            if (data.Mensaje === 'Enviado correctamente') {
+                                console.log('Mensaje enviado correctamente');
+                            } else {
+                                console.error('Error al enviar mensaje:', data.Detalles);
+                            }
+                        },
+                        error: function(error) {
+                            console.error('Error:', error);
+                        }
+                    });
+                }
+                
+                
+                function cargarDatosCliente(clienteId) {
+                    
+                    // Realizar una solicitud AJAX para obtener los datos del cliente a editar
+                    $.ajax({
+                        type: 'GET',
+                        url: '/detalles_cliente/',
+                        data: { cliente_id: clienteId }, // Reemplaza '/obtener_datos_cliente/' con la URL correcta para obtener los datos del cliente
+                        success: function (response) {
+                            var tempElement = $('<div>').html(response);
+                            var nombre = tempElement.find('p').text().trim();
+                            var patente = tempElement.find('span').text().trim(); 
+                            var modelo = tempElement.find('label:eq(0)').text().trim();
+                            var numero = tempElement.find('label:eq(1)').text().trim();
+                            formulario = $('#editarClienteForm')
+                            // Rellenar el formulario con los datos del cliente
+                            $('#nombreEdit', formulario).val(nombre);
+                            $('#numeroEdit', formulario).val(numero);
+                            $('#patenteEdit', formulario).val(patente);
+                            $('#modeloEdit', formulario).val(modelo);
+                
+                            // Cambiar el texto del botón a "Actualizar"
+                            $('#editarClienteForm button').text('Actualizar');
+                        },
+                        error: function (xhr, status, error) {
+                            alert('Error al cargar los datos del cliente');
+                        }
+                    });
+                }
+    
+                // Funcion para elimintar tarea del cliente
+                
+    
+                function eliminarCliente(clienteId) {
+                    if (clienteId === '') {
+                        console.error('El ID de la tarea del cliente es inválido.');
+                        return;  // Salir de la función si el ID es inválido
+                    }
+                    if (confirm("¿Estás seguro de que deseas eliminar al cliente?")) {
+                        fetch(`/eliminar_cliente/?cliente_id=${clienteId}`, {
+                            method: 'DELETE',
+                            headers: {
+                                'X-CSRFToken': '{{ csrf_token }}'  // Asegúrate de incluir el token CSRF
+                            }
+                        })
+                            .then(response => {
+                                if (response.ok) {
+                                    alert('Cliente eliminado correctamente');
+                                    window.location.href = '/clientes/';
+        
+                                    // Aquí puedes realizar acciones adicionales después de eliminar la tarea
+                                }
+                            })
+                            .catch(error => {
+                                console.error('Error al eliminar item:', error);
+                            });
+                    }
+                    
+                }
+    
+                function editarCliente(clienteId) {
+                    // Obtener los datos del formulario
+                    const nombre = $('#nombreEdit').val();
+                    const numero = $('#numeroEdit').val();
+                    const patente = $('#patenteEdit').val();
+                    const modelo = $('#modeloEdit').val();
+                    // Realizar una solicitud AJAX para enviar los datos actualizados al servidor
+                    $.ajax({
+                        type: 'POST',
+                        url: `/editar_cliente/?cliente_id=${clienteId}`,
+                        headers: {
+                            'X-CSRFToken': '{{ csrf_token }}'  // Asegúrate de incluir el token CSRF
+                        }, // Reemplaza '/editar_cliente/' con la URL correcta para editar el cliente
+                        data: {
+                            nombre: nombre,
+                            numero: numero,
+                            patente: patente,
+                            modelo: modelo
+                        },
+                        success: function (response) {
+                            alert('Cliente actualizado correctamente');
+                            $('#popup').fadeOut();
+                            $('#overlay').fadeOut();
+                            window.location.href = '/clientes/';
+                        },
+                        error: function (xhr, status, error) {
+                            alert('Error al actualizar el cliente');
+                        }
+                    });
+                }
+    
+
+                
+                // Función para enviar los datos actualizados al servidor al editar un cliente
+                
+                
+                // Evento para abrir el formulario de edición al hacer clic en el botón de edición en la vista principal
+                
+
+                
+                
+                // Evento para enviar los datos actualizados al servidor al hacer clic en el botón "Guardar" en el formulario de edición
+                $('#editarClienteForm').submit(function (event) {
+                    event.preventDefault();// Evitar el comportamiento por defecto de enviar el formulario
+                    editarCliente(clienteId);  // Enviar los datos actualizados al servidor al editar el cliente
+                });
+
+
+
+                $('#detalleClienteContainer').on('click', 'p', function (event) {
+                    //const clienteId = $(this).data('cliente-id');
+                     // Cargar los datos del cliente en el formulario de edición
+                    if ($(event.target).hasClass('ri-pencil-line')) {
+                          loader.show()
+                    cargarDatosCliente(clienteId);
+                    $('#popupEdit').fadeIn();
+                    $('#overlayEdit').fadeIn();
+                    }
+                    
+                });
+
+
+
+            });
+
+            
+            
+            
+
+            // Función para cerrar el popup de detalles del cliente
+            $('#closeUser').click(function () {
+                $('#popupUser').fadeOut();
+                $('#overlay').fadeOut();
+            });
+
+            $('#closeEdit').click(function () {
+                $('#popupEdit').fadeOut();
+                $('#overlayEdit').fadeOut();
+            });
+
+            // Agregar evento delegado al cuerpo de la tabla para capturar clics en el botón "Quitar"
+            
+
+            // Agregar evento delegado al cuerpo de la tabla para capturar clics en el botón "Quitar"
+            $('#tbody-tareas').on('click', 'tr', function (event) {
+                if ($(event.target).hasClass('ri-close-circle-line')) {
+                    const tareaClienteId = $(this).data('tarea_cliente-id');
+                    eliminarTarea(tareaClienteId);  // Llamar a la función para eliminar la tarea
+                    $(this).remove();  // Quitar la fila de la tabla visualmente
+                }
+            });
+
+            function eliminarTarea(tareaClienteId) {
+                if (tareaClienteId === '') {
+                    console.error('El ID de la tarea del cliente es inválido.');
+                    return;  // Salir de la función si el ID es inválido
+                }
+                if (confirm("¿Estás seguro de que deseas eliminar esta tarea?")) {
+                    loader.show();
+                    fetch(`/eliminar_tarea_cliente/?tarea_cliente_id=${tareaClienteId}`, {
+                        method: 'DELETE',
+                        headers: {
+                            'X-CSRFToken': '{{ csrf_token }}'  // Asegúrate de incluir el token CSRF
+                        }
+                    })
+                        .then(response => {
+                            if (response.ok) {
+                                alert('Tarea del cliente eliminada correctamente');
+                                loader.hide()
+    
+                                // Aquí puedes realizar acciones adicionales después de eliminar la tarea
+                            } else {
+                                alert('Error al eliminar item');
+                                // Aquí puedes manejar errores si la eliminación falla
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error al eliminar item:', error);
+                        });
+                }
+                
+            }
+
+            function getUsername() {
+                loader.show();
+                $.ajax({
+                    type: 'GET',
+                    url: '/get_username/',  // Reemplaza '/get_username/' con la URL correcta de tu vista
+                    success: function (data) {
+                        if (data.username) {
+                            $('#username-label').text(data.username);
+                        } else {
+                            console.error('No se pudo obtener el nombre de usuario.');
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        console.error('Error al obtener el nombre de usuario:', error);
+                    },
+                    complete: function () {
+                        loader.hide();  // Ocultar indicador de carga cuando se completa la solicitud
+                    }
+                });
+            }
+        
+            // Llamar a la función para obtener y mostrar el nombre de usuario al cargar la página
+            getUsername();
+            
+        });
+        
+
+        
+    </script>
+    <style>
+        
+    </style>
+
+</body>
+
+</html>

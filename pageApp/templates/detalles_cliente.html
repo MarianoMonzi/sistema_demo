@@ -1,0 +1,36 @@
+<div id="botones-editar-eliminar-cliente">
+    <i class="ri-id-card-fill"></i>
+    <p>{{ cliente.nombre }}<i class="ri-pencil-line"></i><i class="ri-close-line"></i></p>
+</div>
+
+<span>{{ cliente.patente }}</span>
+<label>{{ cliente.modelo }}</label>
+<label>{{ cliente.numero }}</label>
+<label>{{ cliente.tarea_proxima }}</label>
+<button id="openTask">Nueva Tarea</button>
+<script>
+    const abrirTask = document.getElementById('openTask')
+    const cerrarTask = document.getElementById('closeTask')
+    const popupTask = document.getElementById('popupTask')
+
+    
+    
+
+
+
+    abrirTask.onclick = function () {
+        popupTask.style.display = 'block';
+        overlay.style.display = 'block';
+    };
+
+    cerrarTask.onclick = function () {
+        popupTask.style.animation = 'slideUp 0.5s ease';
+        setTimeout(function () {
+            popupTask.style.display = 'none';
+            popupTask.style.animation = 'slideDown 0.5s ease';
+        }, 250);
+    };
+
+    
+
+</script>

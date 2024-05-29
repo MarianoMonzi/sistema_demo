@@ -1,0 +1,128 @@
+body{
+	box-sizing: border-box;
+	padding: 30px;
+	background-image: url(../image/login.jpg);
+	background-size: cover;
+	font-family: sans-serif, telegraf;
+}
+	
+h1{
+	font-weight: 300;
+	color: #fff;
+	font-size: 44px;
+	text-align: center;
+
+}
+
+h2{
+	margin: 0;
+	color: #fff;
+	letter-spacing: 1px;
+	text-align: center;
+	font-size: 32px;
+}
+
+h3{
+	font-weight: 300;
+	color: #fff;
+	font-size: 16px;
+	text-align: center;
+	margin-bottom: 45px;
+}
+
+form{
+	display: flex;
+	flex-direction: column;
+	gap: 50px;
+}
+
+.btn-log{
+	align-self: center;
+	width: fit-content;
+	border-radius: 20px;
+	border: none;
+	color: #fff;
+	font-size: 18px;
+	background: #1d4ed8;
+	padding: 15px 30px;
+	cursor: pointer;
+	text-decoration: none;
+}
+
+.btn-log:hover{
+	opacity: 0.7;
+}
+
+
+.log-cont{
+	display: flex;
+	justify-content: center;
+	width: 350px;
+	margin: auto;
+	padding: 30px;
+	background-color: rgb(167 167 167 / 19%);	
+	backdrop-filter: blur(10px);
+	border-radius: 20px;
+}
+
+.form-group{
+	display: flex;
+	align-items: center;
+	gap: 15px;
+}
+
+.form-group input{
+    min-height: 24px;
+    border-radius: 30px;
+    border: 1px solid #3b405e;
+    outline: none;
+    background: rgb(167 167 167 / 65%);
+    padding: 5px 8px;
+    color: #E3E3E3;
+}
+
+.icon{
+	display: flex;
+	text-align: center;
+	flex-direction: column;
+	margin: auto;
+}
+
+.icon:last-of-child{
+	margin-right: 30px;
+}
+
+.icon i{
+	color: #E3E3E3;
+	font-size: 36px;
+}
+
+.icon label{
+	margin-top: 5px;
+	color: #fff;
+	font-size: 12px;
+}
+
+.rememberUser{
+	gap: 5px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.rememberUser label{
+	color: #ccc;
+	font-size: 12px;
+	text-align: center;
+}
+
+@media(width < 700px){
+	body{
+		padding: 0;
+		margin: 0;
+		background-size: auto;
+		background-position-y: 65px;
+	}
+}
+
+
