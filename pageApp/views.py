@@ -634,14 +634,16 @@ def guardar_estado_toggle(request):
             if MensajeWhatsApp.objects.filter(cliente_id=cliente_id).exists():
                 MensajeWhatsApp.objects.filter(cliente_id=cliente_id).update(enviar_mensaje=enviar_mensaje)
                 return JsonResponse({'mensaje': 'Estado del toggle actualizado correctamente.'})
-            else:
-                MensajeWhatsApp.objects.update_or_create(
-                cliente_id=cliente_id,
-                defaults={'enviar_mensaje': enviar_mensaje}
-                )
-                return JsonResponse({'mensaje': 'Estado del toggle creado correctamente.'})
+            
         else:
-            return JsonResponse({'mensaje': 'Estado del toggle no guardado'})
+            MensajeWhatsApp.objects.create(
+                cliente_id=cliente_id,
+                enviar_mensaje=enviar_mensaje,
+                fecha_envio=None,  # Asignar valores predeterminados o ajustarlos según sea necesario
+                tarea_id=None,  # Ajustar según sea necesario
+                enviado=False  # Ajustar según sea necesario
+            )
+            return JsonResponse({'mensaje': 'Estado del toggle creado correctamente.'})
 
            
 
@@ -668,7 +670,7 @@ def comprobar_mensajes_pendientes(request):
     # Filtrar las tareas con proxservicio entre ahora y siete días después
     tareas_pendientes = Tarea.objects.filter(
         proxservicio__gte=ahora,
-        proxservicio__lte=siete_dias_despues
+        proxservicio__lte=siete_dias_despues,        
     )
 
     print(tareas_pendientes)

@@ -11,8 +11,8 @@
         href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick-theme.min.css">
     <link rel="stylesheet" type="text/css"
         href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.2.0/remixicon.min.css">
-        <script src="../static/index.js" defer></script>
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script src="../static/index.js" defer></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 
     <title>Lubricentro</title>
 </head>
@@ -46,7 +46,7 @@
     <div class="blur-white"></div>
     <div class="blur-red"></div>
     <div class="blur-red"></div>
-    
+
     {% block content %}
 
     {% endblock %}
@@ -119,14 +119,14 @@
         <span class="close" id="closeUser">&times;</span>
         <div class="data-cont">
             <div class="info" id="detalleClienteContainer">
-                
+
 
             </div>
             <div>
                 <div class="toggle-wsp-cont">
                     <div class="toggle">
-                       <input type="checkbox" id="btn" class="btn">
-                       <label for="btn" class="switch"></label>
+                        <input type="checkbox" id="btn" class="btn">
+                        <label for="btn" class="switch"></label>
                     </div>
                     <i class="ri-whatsapp-line wpicon"></i>
                 </div>
@@ -196,17 +196,17 @@
         $(document).ready(function () {
             var loader = $('#loader');
 
-            $('#closeUser').click(function() {
+            $('#closeUser').click(function () {
                 // Recargar la página
                 location.reload();
             });
             comprobarMensajesPendientes()
-            
 
-            
+
+
 
             function comprobarYEnviarMensajes() {
-                
+
                 $.ajax({
                     type: 'GET',
                     url: `/enviar_mensajes_pendientes/`,
@@ -234,22 +234,15 @@
                     }
                 });
             }
-            
+
             // Función para cargar los detalles del cliente al hacer clic en su nombre
             $(document).on('click', '.openUser', function () {
                 var clienteId = $(this).data('cliente-id');
                 $('#clienteIdInput').val(clienteId);
 
-                let toggleBtn = document.getElementById('btn'); 
+                let toggleBtn = document.getElementById('btn');
 
-                toggleBtn.addEventListener('change', function() {
-                    const isChecked = toggleBtn.checked;
-                    console.log(isChecked); // Imprime true si está activado, false si está desactivado
 
-                    var enviarMensaje = isChecked;
-                    saveToggleState(clienteId, enviarMensaje);
-
-                });
 
                 obtenerYAplicarEstadoToggle();
 
@@ -265,9 +258,9 @@
                         }
                     });
                 }
-            
+
                 // Llamar a la función para obtener y aplicar el estado del toggle al cargar la página
-                
+
 
                 function saveToggleState(clienteId, enviarMensaje) {
                     var csrftoken = getCookie('csrftoken');
@@ -290,20 +283,20 @@
                     });
                 }
 
-                
-                
-                
-                
-                
+
+
+
+
+
                 // Pasar ID del cliente al form de tareas
 
                 // Hacer la solicitud AJAX para obtener los detalles del cliente
-                
+
 
                 // Obtener etiqueta para eliminar cliente
                 $('#detalleClienteContainer').on('click', 'p', function (event) {
                     if ($(event.target).hasClass('ri-close-line')) {
-                        eliminarCliente(clienteId);  
+                        eliminarCliente(clienteId);
                     }
                 });
 
@@ -312,22 +305,22 @@
                         url: `/enviar/${clienteId}/`,
                         method: 'GET',
                         contentType: 'application/json',
-                        success: function(data) {
+                        success: function (data) {
                             if (data.Mensaje === 'Enviado correctamente') {
                                 console.log('Mensaje enviado correctamente');
                             } else {
                                 console.error('Error al enviar mensaje:', data.Detalles);
                             }
                         },
-                        error: function(error) {
+                        error: function (error) {
                             console.error('Error:', error);
                         }
                     });
                 }
-                
-                
+
+
                 function cargarDatosCliente(clienteId) {
-                    
+
                     // Realizar una solicitud AJAX para obtener los datos del cliente a editar
                     $.ajax({
                         type: 'GET',
@@ -336,7 +329,7 @@
                         success: function (response) {
                             var tempElement = $('<div>').html(response);
                             var nombre = tempElement.find('p').text().trim();
-                            var patente = tempElement.find('span').text().trim(); 
+                            var patente = tempElement.find('span').text().trim();
                             var modelo = tempElement.find('label:eq(0)').text().trim();
                             var numero = tempElement.find('label:eq(1)').text().trim();
                             formulario = $('#editarClienteForm')
@@ -345,7 +338,7 @@
                             $('#numeroEdit', formulario).val(numero);
                             $('#patenteEdit', formulario).val(patente);
                             $('#modeloEdit', formulario).val(modelo);
-                
+
                             // Cambiar el texto del botón a "Actualizar"
                             $('#editarClienteForm button').text('Actualizar');
                         },
@@ -354,10 +347,10 @@
                         }
                     });
                 }
-    
+
                 // Funcion para elimintar tarea del cliente
-                
-    
+
+
                 function eliminarCliente(clienteId) {
                     if (clienteId === '') {
                         console.error('El ID de la tarea del cliente es inválido.');
@@ -374,7 +367,7 @@
                                 if (response.ok) {
                                     alert('Cliente eliminado correctamente');
                                     window.location.href = '/clientes/';
-        
+
                                     // Aquí puedes realizar acciones adicionales después de eliminar la tarea
                                 }
                             })
@@ -382,9 +375,9 @@
                                 console.error('Error al eliminar item:', error);
                             });
                     }
-                    
+
                 }
-    
+
                 function editarCliente(clienteId) {
                     // Obtener los datos del formulario
                     const nombre = $('#nombreEdit').val();
@@ -415,17 +408,17 @@
                         }
                     });
                 }
-    
 
-                
+
+
                 // Función para enviar los datos actualizados al servidor al editar un cliente
-                
-                
-                // Evento para abrir el formulario de edición al hacer clic en el botón de edición en la vista principal
-                
 
-                
-                
+
+                // Evento para abrir el formulario de edición al hacer clic en el botón de edición en la vista principal
+
+
+
+
                 // Evento para enviar los datos actualizados al servidor al hacer clic en el botón "Guardar" en el formulario de edición
                 $('#editarClienteForm').submit(function (event) {
                     event.preventDefault();// Evitar el comportamiento por defecto de enviar el formulario
@@ -436,23 +429,23 @@
 
                 $('#detalleClienteContainer').on('click', 'p', function (event) {
                     //const clienteId = $(this).data('cliente-id');
-                     // Cargar los datos del cliente en el formulario de edición
+                    // Cargar los datos del cliente en el formulario de edición
                     if ($(event.target).hasClass('ri-pencil-line')) {
-                          loader.show()
-                    cargarDatosCliente(clienteId);
-                    $('#popupEdit').fadeIn();
-                    $('#overlayEdit').fadeIn();
+                        loader.show()
+                        cargarDatosCliente(clienteId);
+                        $('#popupEdit').fadeIn();
+                        $('#overlayEdit').fadeIn();
                     }
-                    
+
                 });
 
 
 
             });
 
-            
-            
-            
+
+
+
 
             // Función para cerrar el popup de detalles del cliente
             $('#closeUser').click(function () {
@@ -466,7 +459,7 @@
             });
 
             // Agregar evento delegado al cuerpo de la tabla para capturar clics en el botón "Quitar"
-            
+
 
             // Agregar evento delegado al cuerpo de la tabla para capturar clics en el botón "Quitar"
             $('#tbody-tareas').on('click', 'tr', function (event) {
@@ -494,7 +487,7 @@
                             if (response.ok) {
                                 alert('Tarea del cliente eliminada correctamente');
                                 loader.hide()
-    
+
                                 // Aquí puedes realizar acciones adicionales después de eliminar la tarea
                             } else {
                                 alert('Error al eliminar item');
@@ -505,7 +498,7 @@
                             console.error('Error al eliminar item:', error);
                         });
                 }
-                
+
             }
 
             function getUsername() {
@@ -528,17 +521,17 @@
                     }
                 });
             }
-        
+
             // Llamar a la función para obtener y mostrar el nombre de usuario al cargar la página
             getUsername();
-            
-        });
-        
 
-        
+        });
+
+
+
     </script>
     <style>
-        
+
     </style>
 
 </body>

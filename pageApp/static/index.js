@@ -3,7 +3,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const cerrar = document.getElementById('close');
     const popup = document.getElementById('popup');
     const overlay = document.getElementById('overlay');
-    
+
 
     abrir.onclick = function () {
         popup.style.display = 'block';
@@ -34,16 +34,16 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
 
-    
 
-    
 
-    
+
+
+
 
 
 });
 
-function ajaxBuscar(query){
+function ajaxBuscar(query) {
     $.ajax({
         type: 'GET',
         url: '/buscar_cliente/',
@@ -75,11 +75,11 @@ function ajaxBuscar(query){
 }
 
 $('#searchInput').on('input', function () {
-    var query = $(this).val().trim();       
+    var query = $(this).val().trim();
 
     ajaxBuscar(query)
 
-    
+
 });
 
 
@@ -121,11 +121,11 @@ $(document).ready(function () {
             success: function (response) {
                 $('#nuevoClienteForm')[0].reset();
                 $('#popup').hide();
-                
+
                 // Agregar el ID del cliente al input hidden
                 $('#clienteIdInput').val(response.cliente_id);
                 console.log($('#clienteIdInput').val());
-                
+
                 // Abre el popup de detalles del cliente
                 $('#detalleClienteContainer').load('/detalles_cliente/?cliente_id=' + response.cliente_id);
                 $('#popupUser').fadeIn();
@@ -139,15 +139,52 @@ $(document).ready(function () {
 
     $('#nuevaTareaForm').submit(function (e) {
         e.preventDefault();
-        
+
         // Obtener el valor del select
         var selectServicio = $('#selectServicio').val();
 
         // Enviar el formulario por AJAX
         guardarTarea(selectServicio);
-    });    
+    });
+
+
+
+
+
+    let toggleBtn = document.getElementById('btn');
+
+    toggleBtn.addEventListener('change', function () {
+        const isChecked = toggleBtn.checked;
+        console.log(isChecked);
+        let clienteId = $('#clienteIdInput').val();
+        // Imprime true si está activado, false si está desactivado
+
+        var enviarMensaje = isChecked;
+        saveToggleState(clienteId, enviarMensaje);
+
+    });
 });
 
+function saveToggleState(clienteId, enviarMensaje) {
+    var csrftoken = getCookie('csrftoken');
+    $.ajax({
+        type: 'POST',
+        url: '/guardar_estado_toggle/',
+        headers: {
+            'X-CSRFToken': csrftoken  // Asegúrate de incluir el token CSRF
+        },
+        data: {
+            cliente_id: clienteId,
+            enviar_mensaje: enviarMensaje
+        },
+        success: function (response) {
+            console.log(response.mensaje);
+        },
+        error: function (xhr, status, error) {
+            console.error('Error al guardar el estado del toggle:', error);
+        }
+    });
+}
 
 function getCookie(name) {
     var cookieValue = null;
@@ -208,18 +245,18 @@ function cargarDetallesCliente(clienteId) {
 }
 
 // Evento para abrir el popup del cliente al hacer clic en su nombre
-$(document).on('click', '.openUser', function() {
+$(document).on('click', '.openUser', function () {
     var clienteId = $(this).data('cliente-id');
     cargarDetallesCliente(clienteId);
 
-    
 
-    
+
+
 });
 
 
 
-function guardarTarea(selectServicio) {
+function guardarTarea() {
     $.ajax({
         type: 'POST',
         url: '/guardar_tarea/',
