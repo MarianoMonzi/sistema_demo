@@ -157,6 +157,7 @@ $(document).ready(function () {
         const isChecked = toggleBtn.checked;
         console.log(isChecked);
         let clienteId = $('#clienteIdInput').val();
+        console.log(clienteId);
         // Imprime true si está activado, false si está desactivado
 
         var enviarMensaje = isChecked;
@@ -167,6 +168,7 @@ $(document).ready(function () {
 
 function saveToggleState(clienteId, enviarMensaje) {
     var csrftoken = getCookie('csrftoken');
+    console.log(csrftoken);
     $.ajax({
         type: 'POST',
         url: '/guardar_estado_toggle/',

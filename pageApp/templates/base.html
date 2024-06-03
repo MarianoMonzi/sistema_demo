@@ -262,26 +262,7 @@
                 // Llamar a la función para obtener y aplicar el estado del toggle al cargar la página
 
 
-                function saveToggleState(clienteId, enviarMensaje) {
-                    var csrftoken = getCookie('csrftoken');
-                    $.ajax({
-                        type: 'POST',
-                        url: '/guardar_estado_toggle/',
-                        headers: {
-                            'X-CSRFToken': csrftoken  // Asegúrate de incluir el token CSRF
-                        },
-                        data: {
-                            cliente_id: clienteId,
-                            enviar_mensaje: enviarMensaje
-                        },
-                        success: function (response) {
-                            console.log(response.mensaje);
-                        },
-                        error: function (xhr, status, error) {
-                            console.error('Error al guardar el estado del toggle:', error);
-                        }
-                    });
-                }
+
 
 
 
